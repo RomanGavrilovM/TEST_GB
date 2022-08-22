@@ -12,12 +12,40 @@ import java.util.*
 
 class DetailsActivity : AppCompatActivity(), ViewDetailsContract {
 
-    private val presenter: PresenterDetailsContract = DetailsPresenter(this)
+    private val presenter: PresenterDetailsContract = DetailsPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
+        presenter.onAttach(this)
         setUI()
+    }
+
+    override fun onResume() {
+        presenter.onAttach(this)
+        super.onResume()
+    }
+
+    override fun onPause() {
+        presenter.onDetach()
+        super.onPause()
+
+    }
+
+    override fun onDestroy() {
+        presenter.onDetach()
+        super.onDestroy()
+
+    }
+
+    override fun onBackPressed() {
+        presenter.onDetach()
+        super.onBackPressed()
+
+    }
+
+    internal fun getPresenter():PresenterDetailsContract{
+        return this.presenter
     }
 
     private fun setUI() {
@@ -33,7 +61,7 @@ class DetailsActivity : AppCompatActivity(), ViewDetailsContract {
     }
 
     private fun setCountText(count: Int) {
-        totalCountTextView.text =
+        totalCountTextViewDetail.text =
             String.format(Locale.getDefault(), getString(R.string.results_count), count)
     }
 
